@@ -18,16 +18,15 @@ def round_to_nearest(x, level=5000):
 
 def recursive_find_instrument(symbols, format, strike_price, dt, delta=5000, depth=0):
     instrument = format.format(strike = strike_price)
-    print(f"calling strike_price={strike_price}, depth={depth}, instrument={instrument}")
+    # print(f"calling strike_price={strike_price}, depth={depth}, instrument={instrument}")
     # base case
-    if instrument in symbols and dt > parser.parse(symbols[instrument]):
+    if instrument in symbols and dt > parser.parse(symbols[instrument]['availableSince']):
         return format.format(strike = strike_price)
     if depth >= 3: return None
 
     plus_delta_result = recursive_find_instrument(symbols, format, strike_price+delta, dt, delta, depth+1)
-    minus_delta_result = recursive_find_instrument(symbols, format, strike_price-delta, dt, delta, depth+1)
-
     if plus_delta_result != None: return plus_delta_result
+    minus_delta_result = recursive_find_instrument(symbols, format, strike_price-delta, dt, delta, depth+1)
     if minus_delta_result != None: return minus_delta_result
 
 def get_seasonal_expiry_dates_and_strike_price(instrument_name, prefix):
@@ -51,7 +50,7 @@ class DeribitDetails:
             self.prefix = prefix
             json_deribit_details = json.load(f_deribit_details)
         
-            symbols = { symbol['id']: symbol['availableSince'] for symbol in json_deribit_details['availableSymbols'] }
+            symbols = { symbol['id']: {'availableSince': symbol['availableSince'] , 'availableTo': symbol['availableTo']} for symbol in json_deribit_details['datasets']['symbols'] }
             self.symbols = symbols
 
             # expiry_dates_strike_price = { get_seasonal_expiry_dates_and_strike_price(symbol, prefix) for symbol in symbols }
@@ -65,16 +64,17 @@ class DeribitDetails:
         end_month, end_year = get_next_season_end_month(dt.month, dt.year)
         end_day = get_last_friday(end_month, end_year)
         instrument_date = datetime(end_year, end_month, end_day).strftime('%d%b%y').upper()
-        print(instrument_date)
+        # print(instrument_date)
 
         # then the strike price
         initial_strike_price = round_to_nearest(price, delta)
-        instrument = recursive_find_instrument(self.symbols, f'{self.prefix}-{instrument_date}-{{strike}}-C', initial_strike_price, dt, delta)
-        return instrument
+        instrument_call = recursive_find_instrument(self.symbols, f'{self.prefix}-{instrument_date}-{{strike}}-C', initial_strike_price, dt, delta)
+        instrument_put = recursive_find_instrument(self.symbols, f'{self.prefix}-{instrument_date}-{{strike}}-P', initial_strike_price, dt, delta)
+        return [instrument_call, instrument_put]
 
 if __name__ == '__main__':
     deribit_details = DeribitDetails()
-    deribit_details.determine_instruments('2021-12-08', 38242)
+    print(deribit_details.determine_instruments('2021-12-08', 38242))
 
     # for i in range(1, 13):
     #     print(f"for month {i}: {get_next_season_end_month(i, 2021)}")
