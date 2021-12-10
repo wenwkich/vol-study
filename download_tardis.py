@@ -14,10 +14,10 @@ logging.basicConfig(level=logging.DEBUG)
 def default_file_name(exchange, data_type, date, symbol, format):
     return f"{exchange}_{data_type}_{date.strftime('%Y-%m-%d')}_{symbol}.{format}.gz"
 
-def download_tardis(from_date, to_date, symbols): 
+def download_tardis(from_date, to_date, symbols, data_types=["quotes", "trades"]): 
     datasets.download(
         exchange="deribit",
-        data_types=["quotes", "trades"],
+        data_types=data_types,
         from_date=from_date,
         to_date=to_date,
         symbols=symbols,
