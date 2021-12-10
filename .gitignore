@@ -1,0 +1,4 @@
+datasets/
+outs/
+.env
+.DS_Store
