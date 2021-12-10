@@ -22,7 +22,7 @@ def recursive_find_instrument(symbols, format, strike_price, dt, delta=1000, dep
     # base case
     if instrument in symbols and dt > parser.parse(symbols[instrument]['availableSince']):
         return format.format(strike = strike_price)
-    if depth >= 3: return None
+    if depth >= 5: return None
 
     plus_delta_result = recursive_find_instrument(symbols, format, strike_price+delta, dt, delta, depth+1)
     if plus_delta_result != None: return plus_delta_result
@@ -70,7 +70,8 @@ class DeribitDetails:
         initial_strike_price = round_to_nearest(price, delta)
         instrument_call = recursive_find_instrument(self.symbols, f'{self.prefix}-{instrument_date}-{{strike}}-C', initial_strike_price, dt, delta)
         instrument_put = recursive_find_instrument(self.symbols, f'{self.prefix}-{instrument_date}-{{strike}}-P', initial_strike_price, dt, delta)
-        return [instrument_call, instrument_put]
+        if instrument_call != None and instrument_put != None:
+            return [instrument_call, instrument_put]
 
 if __name__ == '__main__':
     deribit_details = DeribitDetails()
