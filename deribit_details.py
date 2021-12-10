@@ -16,7 +16,7 @@ def get_last_friday(month, year):
 def round_to_nearest(x, level=5000):
     return (x+level//2)//level*level
 
-def recursive_find_instrument(symbols, format, strike_price, dt, delta=5000, depth=0):
+def recursive_find_instrument(symbols, format, strike_price, dt, delta=1000, depth=0):
     instrument = format.format(strike = strike_price)
     # print(f"calling strike_price={strike_price}, depth={depth}, instrument={instrument}")
     # base case
@@ -57,7 +57,7 @@ class DeribitDetails:
             # print(expiry_dates_strike_price)
             # self.expiry_dates_strike_price = expiry_dates_strike_price
 
-    def determine_instruments(self, ts, price, delta=5000):
+    def determine_instruments(self, ts, price, delta=1000):
         # determine the date first
         dt = parser.parse(ts)
         dt = dt.replace(tzinfo=tz.UTC)
@@ -74,7 +74,7 @@ class DeribitDetails:
 
 if __name__ == '__main__':
     deribit_details = DeribitDetails()
-    print(deribit_details.determine_instruments('2021-12-08', 38242))
+    print(deribit_details.determine_instruments('2020-12-08', 35015, delta=1000))
 
     # for i in range(1, 13):
     #     print(f"for month {i}: {get_next_season_end_month(i, 2021)}")
