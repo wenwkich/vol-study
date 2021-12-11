@@ -30,7 +30,7 @@ def recursive_find_instrument(symbols, format, strike_price, dt, delta=1000, dep
     if minus_delta_result != None: return minus_delta_result
 
 def get_seasonal_expiry_dates_and_strike_price(instrument_name, prefix):
-    result = re.search('^{prefix}-((24|25|26|27|28|29|30|31)(MAR|JUN|SEP|DEC)([0-9]{{2}}))-([0-9]*)-(P|C)$'.format(prefix = prefix), instrument_name) 
+    result = re.search('^{prefix}-([0-9]{{1,2}}[A-Z]{{3}}([0-9]{{2}}))-([0-9]*)-(P|C)$'.format(prefix = prefix), instrument_name) 
 
     if result is not None: 
         expiry_date = result.group(1)
