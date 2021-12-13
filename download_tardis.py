@@ -22,11 +22,11 @@ def download_tardis(date, symbols, data_types=["quotes", "trades"]):
         to_date=date,
         symbols=symbols,
         api_key=TARDIS_KEY,
-        download_dir="./datasets",
+        download_dir="../datasets",
         get_filename=default_file_name,
     )
 
-def download_details(path='./datasets/details.json'):
+def download_details(path='../datasets/details.json'):
     with open(path, 'w') as f_details:
         json.dump(f_details, get_exchange_details('deribit'))
 

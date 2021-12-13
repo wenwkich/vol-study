@@ -9,7 +9,7 @@ from py_vollib_vectorized.implied_volatility import vectorized_implied_volatilit
 def glob_re(pattern, strings):
     return filter(re.compile(pattern).match, strings)
 
-def concat_option_price(prefix="BTC", datatype='quotes', basepath='./datasets'):
+def concat_option_price(prefix="BTC", datatype='quotes', basepath='../datasets'):
     filenames = glob_re(path.join(basepath, f"deribit_{datatype}_([0-9]{{4}}-[0-9]{{2}}-[0-9]{{2}})_({prefix}-[0-9]{{1,2}}[A-Z]{{3}}[0-9]{{2}}-[0-9]*-(C|P)).csv.gz"), glob.glob(os.path.join(basepath, "*.csv.gz")))
 
     df = pd.concat(
@@ -26,4 +26,4 @@ def concat_option_price(prefix="BTC", datatype='quotes', basepath='./datasets'):
 if __name__ == "__main__":
     df = concat_option_price(datatype="trades")
     print(df.head())
-    df.to_csv('./outs/deribit_trades_history.csv.gz', compression='gzip')
+    df.to_csv('../outs/deribit_trades_history.csv.gz', compression='gzip')

@@ -45,7 +45,7 @@ def get_seasonal_expiry_dates_and_strike_price(instrument_name, prefix):
 
 class DeribitDetails:
 
-    def __init__(self, prefix='BTC', detail_json_path='./datasets/details.json'):
+    def __init__(self, prefix='BTC', detail_json_path='../datasets/details.json'):
         with open(detail_json_path, 'r') as f_deribit_details:
             self.prefix = prefix
             json_deribit_details = json.load(f_deribit_details)

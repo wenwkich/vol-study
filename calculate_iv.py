@@ -10,11 +10,11 @@ from deribit_details import DeribitDetails
 def format_unix(unix):
     return parser.parse(unix).strftime('%Y-%m-%d')
 
-def get_deribit_data_path(instrument_name, ts, datatype='quotes', basepath='./datasets'):
+def get_deribit_data_path(instrument_name, ts, datatype='quotes', basepath='../datasets'):
     fn = f'deribit_{datatype}_{ts}_{instrument_name}.csv.gz'
     return path.join(basepath, fn)
 
-def get_iv_result_path(instrument_name, ts, basepath='./outs'):
+def get_iv_result_path(instrument_name, ts, basepath='../outs'):
     fn = f'deribit_iv_{ts}_{instrument_name}.csv'
     return path.join(basepath, fn)
 
@@ -22,8 +22,8 @@ def calculate_iv_per_file(prefix='BTC'):
     # for each day, i need to download the ATM option trades data at that season
     # if the seasonal contract is from the next month, i will download the seasonal contract at the next month
     deribit = DeribitDetails()
-    df = pd.read_csv('./outs/bitcoin_historical_vol.csv')
-    df_1m = pd.read_csv('./datasets/Binance_BTCUSDT_minute.csv', header=1,)
+    df = pd.read_csv('../outs/bitcoin_historical_vol.csv')
+    df_1m = pd.read_csv('../datasets/Binance_BTCUSDT_minute.csv', header=1,)
     df_1m['datetime'] = pd.to_datetime(df_1m['unix'], unit='ms')
     df_1m = df_1m.set_index('datetime')
     df_1m.sort_values(by="datetime", inplace=True, ascending=True)
